@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ```
 
 # 3.Model
-* 3.1.1 download  checkpoints  from [EEEELY/DICE-Talk](https://huggingface.co/EEEELY/DICE-Talk/tree/main) 从Google下载必须的模型,文件结构如下图
+* 3.1.1 download  checkpoints  from [EEEELY/DICE-Talk](https://huggingface.co/EEEELY/DICE-Talk/tree/main) 从抱脸下载必须的模型,文件结构如下图
 * 3.1.2 download [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny/tree/main)
 ```
 --  ComfyUI/models/dice_talk/
