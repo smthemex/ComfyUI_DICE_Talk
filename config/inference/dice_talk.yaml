@@ -1,0 +1,32 @@
+pretrained_model_name_or_path: "checkpoints/stable-video-diffusion-img2vid-xt"
+unet_checkpoint_path: "checkpoints/DICE-Talk/unet.pth"
+pose_guider_checkpoint_path: "checkpoints/DICE-Talk/pose_guider.pth"
+audio_linear_checkpoint_path: "checkpoints/DICE-Talk/audio_linear.pth"
+emo_model_checkpoint_path: "checkpoints/DICE-Talk/emo_model.pth"
+
+weight_dtype: 'fp16'  # [fp16, fp32]
+
+num_inference_steps: 25
+n_sample_frames: 25
+fps: 12.5
+decode_chunk_size: 10
+motion_bucket_id: 8
+motion_bucket_id_exp: 16
+image_size: 512
+area: 1.1
+frame_num: 10000
+step: 2
+overlap: 0
+shift_offset: 7
+min_appearance_guidance_scale: 4.0
+max_appearance_guidance_scale: 4.0
+audio_guidance_scale: 7.5
+i2i_noise_strength: 1.0
+ip_audio_scale: 1.0
+ip_emo_scale: 1.0
+noise_aug_strength: 0.00
+retrieval: False
+
+use_interframe: True
+
+seed: 72589
