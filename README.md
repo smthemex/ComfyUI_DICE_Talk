@@ -1,8 +1,8 @@
 # ComfyUI_DICE_Talk
 Use [DICE-Talk](https://github.com/toto222/DICE-Talk) in ComfyUI，which is a method about 'Correlation-Aware Emotional Talking Portrait Generation'.
 
-# Will Update codes tomorrow,coming soon.
-
+#  Update
+* fix GPU Unload error
 
 # 1. Installation
 
