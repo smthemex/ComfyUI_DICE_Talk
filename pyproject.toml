@@ -1,0 +1,15 @@
+[project]
+name = "dice_talk"
+description = "Use DICE-Talk in ComfyUI，which is a method about Correlation-Aware Emotional Talking Portrait Generation."
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["#accelerate==0.28.0", "#av==11.0.0", "diffusers", "einops==0.7.0", "#pydantic==2.10.6", "#gradio==4.44.1", "imageio", "imageio-ffmpeg", "librosa", "#numpy==1.26.4", "omegaconf", "opencv-python", "#sk-video==1.1.10", "#tqdm==4.65.2", "transformers"]
+
+[project.urls]
+Repository = "https://github.com/smthemex/ComfyUI_DICE_Talk"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "smthemex"
+DisplayName = "ComfyUI_DICE_Talk"
+Icon = ""
