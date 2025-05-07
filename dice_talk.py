@@ -1,25 +1,13 @@
 import os
 import torch
-import torch.utils.checkpoint
-from PIL import Image
-import numpy as np
-from omegaconf import OmegaConf
 from tqdm import tqdm
-import cv2
 
-from diffusers import AutoencoderKLTemporalDecoder
-from diffusers.schedulers import EulerDiscreteScheduler
-from transformers import WhisperModel, CLIPVisionModelWithProjection, AutoFeatureExtractor
-
-from .src.utils.util import save_videos_grid, seed_everything
-from .src.dataset.test_preprocess import process_bbox, image_audio_emo_to_tensor
-from .src.models.base.unet_spatio_temporal_condition import UNetSpatioTemporalConditionModel, add_ip_adapters
-from .src.models.audio_adapter.pose_guider import PoseGuider
+from .src.utils.util import  seed_everything
+from .src.dataset.test_preprocess import process_bbox
 from .src.pipelines.pipeline_dicetalk import DicePipeline
-from .src.models.audio_adapter.audio_proj import AudioProjModel
+
 from .src.utils.RIFE.RIFE_HDv3 import RIFEModel
-from .src.utils.face_align.align import AlignImage
-from .src.models.emotion_adapter.emo import EmotionModel
+
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -146,64 +134,11 @@ def test(
     height,
     data_dict,
     device,
+    weight_dtype,
 ):  
-    # for k, v in batch.items():
-    #     if isinstance(v, torch.Tensor):
-    #         batch[k] = v.unsqueeze(0).to(device="cuda").float()
-    #         print(batch[k].shape)
-    # ref_img = batch['ref_img']
-    # clip_img = batch['clip_images']
+   
 
-    
-    # audio_feature = batch['audio_feature']
-    # audio_len = batch['audio_len']
-    # emo_prior = batch['emo_feature']
-
-    # retrieval = config.retrieval
-    # step = int(config.step)
-
-    # window = 3000
-    # audio_prompts = []
-    # for i in range(0, audio_feature.shape[-1], window):
-    #     audio_prompt = wav_enc.encoder(audio_feature[:,:,i:i+window], output_hidden_states=True).hidden_states
-    #     audio_prompt = torch.stack(audio_prompt, dim=2)
-    #     audio_prompts.append(audio_prompt)
-    # audio_prompts = torch.cat(audio_prompts, dim=1)
-    # audio_prompts = audio_prompts[:,:audio_len*2]
-
-
-    # audio_prompts = torch.cat([torch.zeros_like(audio_prompts[:,:4]), audio_prompts, torch.zeros_like(audio_prompts[:,:6])], 1)
-
-
-    # pose_tensor_list = []
-    # ref_tensor_list = []
-    # audio_tensor_list = []
-    # uncond_audio_tensor_list = []
-    # emotion_tensor_list = []
-    # uncond_emotion_tensor_list = []
-
-    
-    # for i in tqdm(range(audio_len//step)):
-
-    #     pixel_values_pose = batch["face_mask"]
-
-    #     audio_clip = audio_prompts[:,i*2*step:i*2*step+10].unsqueeze(0)
-    #     cond_audio_clip = audio_pe(audio_clip).squeeze(0)
-    #     uncond_audio_clip = audio_pe(torch.zeros_like(audio_clip)).squeeze(0)
-
-
-    #     new_emo_hidden_states = emo_pe(emo_prior, retrieval=retrieval)[0].squeeze(0)
-    #     new_uncond_emo_hidden_states = emo_pe(torch.zeros_like(emo_prior), retrieval=retrieval)[0].squeeze(0)
-
-
-    #     pose_tensor_list.append(pixel_values_pose[0])
-    #     ref_tensor_list.append(ref_img[0])
-    #     audio_tensor_list.append(cond_audio_clip[0])
-    #     uncond_audio_tensor_list.append(uncond_audio_clip[0])
-
-    #     emotion_tensor_list.append(new_emo_hidden_states[0])
-    #     uncond_emotion_tensor_list.append(new_uncond_emo_hidden_states[0])
-
+    pipe.to(device=device, dtype=weight_dtype)
 
     video = pipe(
         data_dict["ref_img"],
@@ -259,82 +194,8 @@ class DICE_Talk():
         #config.use_interframe = enable_interpolate_frame
         self.use_interframe = use_interframe
         #device = 'cuda:{}'.format(device_id) if device_id > -1 else 'cpu'
-
+        self.weight_dtype = weight_dtype
         #config.pretrained_model_name_or_path = os.path.join(BASE_DIR, config.pretrained_model_name_or_path)
-
-        # vae = AutoencoderKLTemporalDecoder.from_pretrained(
-        #     config.pretrained_model_name_or_path, 
-        #     subfolder="vae",
-        #     variant="fp16")
-        
-        # val_noise_scheduler = EulerDiscreteScheduler.from_pretrained(
-        #     config.pretrained_model_name_or_path, 
-        #     subfolder="scheduler")
-        
-        # image_encoder = CLIPVisionModelWithProjection.from_pretrained(
-        #     config.pretrained_model_name_or_path, 
-        #     subfolder="image_encoder",
-        #     variant="fp16")
-        # unet = UNetSpatioTemporalConditionModel.from_pretrained(
-        #     config.pretrained_model_name_or_path,
-        #     subfolder="unet",
-        #     variant="fp16")
-
-        # adapter_modules = add_ip_adapters(unet, [32, 32], [ip_audio_scale, ip_emo_scale])
-        # pose_guider = PoseGuider(
-        #     conditioning_embedding_channels=320, 
-        #     block_out_channels=(16, 32, 96, 256)
-        # ).to(device)
-        # audio_linear = AudioProjModel(seq_len=10, blocks=5, channels=384, intermediate_dim=1024, output_dim=1024, context_tokens=32).to(device)
-        # emo_model = EmotionModel().to(device)
-
-        #pose_guider_checkpoint_path = os.path.join(BASE_DIR, config.pose_guider_checkpoint_path)
-        # unet_checkpoint_path = os.path.join(BASE_DIR, config.unet_checkpoint_path)
-        # audio_linear_checkpoint_path = os.path.join(BASE_DIR, config.audio_linear_checkpoint_path)
-        # emo_model_checkpoint_path = os.path.join(BASE_DIR, config.emo_model_checkpoint_path)
-
-        # pose_guider.load_state_dict(
-        #     torch.load(pose_guider_checkpoint_path, map_location="cpu"),
-        #     strict=True,
-        # )
-
-
-        # unet.load_state_dict(
-        #     torch.load(unet_checkpoint_path, map_location="cpu"),
-        #     strict=False,
-        # )
-        
-        # audio_linear.load_state_dict(
-        #     torch.load(audio_linear_checkpoint_path, map_location="cpu"),
-        #     strict=True,
-        # )
-
-        # emo_model.load_state_dict(
-        #     torch.load(emo_model_checkpoint_path, map_location="cpu"),
-        #     strict=False,
-        # )
-        
-
-        # if weight_dtype == "fp16":
-        #     weight_dtype = torch.float16
-        # elif weight_dtype == "fp32":
-        #     weight_dtype = torch.float32
-        # elif weight_dtype == "bf16":
-        #     weight_dtype = torch.bfloat16
-        # else:
-        #     raise ValueError(
-        #         f"Do not support weight dtype: {config.weight_dtype} during training"
-        #     )
-
-        #whisper = WhisperModel.from_pretrained(os.path.join(BASE_DIR, 'checkpoints/whisper-tiny/')).to(device).eval()
-        
-        #whisper.requires_grad_(False)
-
-        #self.feature_extractor = AutoFeatureExtractor.from_pretrained(os.path.join(BASE_DIR, 'checkpoints/whisper-tiny/'))
-
-        #det_path = os.path.join(BASE_DIR, 'checkpoints/yoloface_v5m.pt')
-
-        #self.face_det = AlignImage(device, det_path=det_path)
 
         if self.use_interframe:
             rife = RIFEModel(device=device)
@@ -345,19 +206,13 @@ class DICE_Talk():
         # vae.to(weight_dtype)
         unet.to(weight_dtype)
 
-        pipe = DicePipeline(
+        self.pipe = DicePipeline(
             unet=unet,
             vae_config=vae_config,
             pose_guider=pose_guider,
             scheduler=val_noise_scheduler,
         )
-        pipe = pipe.to(device=device, dtype=weight_dtype)
 
-        self.pipe = pipe
-        # self.whisper = whisper
-        # self.audio_linear = audio_linear
-        # self.emo_model = emo_model
-        # self.image_encoder = image_encoder
         self.device = device
 
         print('init done')
@@ -402,6 +257,7 @@ class DICE_Talk():
             height=height,
             data_dict=data_dict,
             device=self.device,
+            weight_dtype=self.weight_dtype,
             )
 
         if self.use_interframe:
