@@ -2,11 +2,11 @@
 Use [DICE-Talk](https://github.com/toto222/DICE-Talk) in ComfyUI，which is a method about 'Correlation-Aware Emotional Talking Portrait Generation'.
 
 #  Update
-* fix GPU Unload error
+* 重新封装，去掉diffuser和transformer的版本限制/ repackage, remove the version limit of diffuser and transformer
 
 # 1. Installation
 
-In the ./ComfyUI/custom_node directory, run the following:   
+In the ./ComfyUI/custom_nodes directory, run the following:   
 ```
 git clone https://github.com/smthemex/ComfyUI_DICE_Talk.git
 ```
@@ -18,15 +18,16 @@ git clone https://github.com/smthemex/ComfyUI_DICE_Talk.git
 pip install -r requirements.txt
 ```
 
-# 3.Model
-* 3.1.1 download  checkpoints  from [EEEELY/DICE-Talk](https://huggingface.co/EEEELY/DICE-Talk/tree/main) 从抱脸下载必须的模型,文件结构如下图
-* 3.1.2 download [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny/tree/main)
+# 3.Models
+* 3.1 download  checkpoints  from [EEEELY/DICE-Talk](https://huggingface.co/EEEELY/DICE-Talk/tree/main) 从抱脸下载必须的模型,文件结构如下图
+* 3.2 download [openai/whisper-tiny](https://huggingface.co/openai/whisper-tiny/tree/main)
+* 3.3 SVD checkpoints  [svd_xt.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)  or [svd_xt_1_1.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1)    
 ```
---  ComfyUI/models/dice_talk/
+--  ComfyUI/models/sonic/
     |-- audio_linear.pth
     |-- emo_model.pth
     |-- pose_guider.pth
-    |-- unet.pth
+    |-- dice_unet.pth #  rename for different from sonic
     |-- yoloface_v5m.pt  #can use sonic 可以用sonic的，不需要复制
     |-- whisper-tiny/  #can use sonic 可以用sonic的，不需要复制
         |--config.json
@@ -34,10 +35,6 @@ pip install -r requirements.txt
         |--preprocessor_config.json
     |-- RIFE/  #can use sonic 可以用sonic的，不需要复制
         |--flownet.pkl
-```
-*  3.2 SVD checkpoints  [svd_xt.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt)  or [svd_xt_1_1.safetensors](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1)    
-
-```
 --   ComfyUI/models/checkpoints
     ├── svd_xt.safetensors  or  svd_xt_1_1.safetensors
 ```

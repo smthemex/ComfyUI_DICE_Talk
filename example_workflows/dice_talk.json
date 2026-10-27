@@ -1,0 +1,652 @@
+{
+  "id": "5713a23f-8d94-4bed-9af4-ce3e9c5d5f0d",
+  "revision": 0,
+  "last_node_id": 12,
+  "last_link_id": 18,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "DICENativeLoader",
+      "pos": [
+        26.133341471354186,
+        58.13332112630209
+      ],
+      "size": [
+        360,
+        214
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            18
+          ]
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "slot_index": 1,
+          "links": [
+            2,
+            3
+          ]
+        },
+        {
+          "name": "clip_vision",
+          "type": "CLIP_VISION",
+          "slot_index": 2,
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "dtype",
+          "type": "DTYPE",
+          "slot_index": 3,
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DICENativeLoader"
+      },
+      "widgets_values": [
+        "svd_xt_1_1.safetensors",
+        "dice_unet.pth",
+        1,
+        1,
+        "fp16"
+      ],
+      "widgets_values_named": {
+        "svd_checkpoint": "svd_xt_1_1.safetensors",
+        "dice_unet": "dice_unet.pth",
+        "ip_audio_scale": 1,
+        "ip_emo_scale": 1,
+        "dtype": "fp16"
+      }
+    },
+    {
+      "id": 6,
+      "type": "LoadAudio",
+      "pos": [
+        40,
+        380
+      ],
+      "size": [
+        320,
+        136
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "slot_index": 0,
+          "links": [
+            6,
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "female.wav",
+        ""
+      ],
+      "widgets_values_named": {
+        "audio": "female.wav",
+        "upload": ""
+      }
+    },
+    {
+      "id": 7,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        540
+      ],
+      "size": [
+        320,
+        320
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "female.png",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "female.png",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 2,
+      "type": "DICENativePreData",
+      "pos": [
+        440,
+        120
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip_vision",
+          "type": "CLIP_VISION",
+          "link": 4
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 7
+        },
+        {
+          "name": "dtype",
+          "type": "DTYPE",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "DICE_NATIVE_DATA",
+          "type": "DICE_NATIVE_DATA",
+          "slot_index": 0,
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DICENativePreData"
+      },
+      "widgets_values": [
+        "happy",
+        512,
+        0,
+        false,
+        1.1
+      ],
+      "widgets_values_named": {
+        "emotion": "happy",
+        "min_resolution": 512,
+        "duration": 0,
+        "retrieval": false,
+        "area": 1.1
+      }
+    },
+    {
+      "id": 4,
+      "type": "VAEDecode",
+      "pos": [
+        1220,
+        120
+      ],
+      "size": [
+        240,
+        60
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 16
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 11,
+      "type": "DICENativeRife",
+      "pos": [
+        1220,
+        240
+      ],
+      "size": [
+        300,
+        80
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "slot_index": 1,
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DICENativeRife"
+      },
+      "widgets_values": [
+        12.5
+      ],
+      "widgets_values_named": {
+        "fps": 12.5
+      }
+    },
+    {
+      "id": 5,
+      "type": "CreateVideo",
+      "pos": [
+        1560,
+        120
+      ],
+      "size": [
+        300,
+        160
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 12
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "slot_index": 0,
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        25,
+        "auto",
+        "sRGB",
+        "none"
+      ],
+      "widgets_values_named": {
+        "fps": 25,
+        "bit_depth": "auto",
+        "color_space": "sRGB",
+        "codec": "none"
+      }
+    },
+    {
+      "id": 8,
+      "type": "SaveVideo",
+      "pos": [
+        1217.4632974853514,
+        386.20000000000005
+      ],
+      "size": [
+        394.5304933658315,
+        483.00626621489937
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "slot_index": 0,
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/DICE_Talk",
+        "auto",
+        "auto",
+        "auto"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "video/DICE_Talk",
+        "format": "auto",
+        "format.codec": "auto",
+        "codec": "auto"
+      }
+    },
+    {
+      "id": 9,
+      "type": "MarkdownNote",
+      "pos": [
+        445.68878375244145,
+        563.5232162475585
+      ],
+      "size": [
+        620,
+        300
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Notes",
+      "properties": {},
+      "widgets_values": [
+        "# DICE-Talk Native\n- `duration = 0` -> use the whole audio (frame count follows the audio). `duration > 0` is a MAX cap in seconds.\n- `fps` on the Sampler is the **adm micro-condition** (official 12.5). It is NOT the output frame rate.\n- Output rate: RIFE returns `fps*2` (25). Set CreateVideo/SaveVideo fps to 25 when RIFE is used, 12.5 without it.\n- VRAM: this UNet is ~3.1 GB fp16 but the sliding window runs 3 CFG branches x 25 frames per window.\n  On a 12 GB card 512 px + long audio will hit shared memory (10-20x slower). Use a shorter `duration`, or a smaller `min_resolution`.\n- Emotion: pick one of emotions/*.npy; `emotion_guidance` (default 6.0) is the emotion strength, `appearance_guidance` (default 3.0) is identity preservation.\n- `ip_audio_scale` / `ip_emo_scale` on the Loader are the IP-Adapter branch weights (official 1.0 / 1.0).\n- A different `seed` changes motion + expression phase; the reference identity is anchored by the c_concat latent."
+      ],
+      "widgets_values_named": {
+        "text": "# DICE-Talk Native\n- `duration = 0` -> use the whole audio (frame count follows the audio). `duration > 0` is a MAX cap in seconds.\n- `fps` on the Sampler is the **adm micro-condition** (official 12.5). It is NOT the output frame rate.\n- Output rate: RIFE returns `fps*2` (25). Set CreateVideo/SaveVideo fps to 25 when RIFE is used, 12.5 without it.\n- VRAM: this UNet is ~3.1 GB fp16 but the sliding window runs 3 CFG branches x 25 frames per window.\n  On a 12 GB card 512 px + long audio will hit shared memory (10-20x slower). Use a shorter `duration`, or a smaller `min_resolution`.\n- Emotion: pick one of emotions/*.npy; `emotion_guidance` (default 6.0) is the emotion strength, `appearance_guidance` (default 3.0) is identity preservation.\n- `ip_audio_scale` / `ip_emo_scale` on the Loader are the IP-Adapter branch weights (official 1.0 / 1.0).\n- A different `seed` changes motion + expression phase; the reference identity is anchored by the c_concat latent."
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "DICENativeSampler",
+      "pos": [
+        841.3913650950778,
+        71.91558106518886
+      ],
+      "size": [
+        289.466796875,
+        362
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "dice_data",
+          "type": "DICE_NATIVE_DATA",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "num_frames",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DICENativeSampler"
+      },
+      "widgets_values": [
+        1608930019,
+        "randomize",
+        25,
+        3,
+        6,
+        12.5,
+        8,
+        16,
+        1,
+        14,
+        0,
+        7
+      ],
+      "widgets_values_named": {
+        "seed": 1608930019,
+        "control_after_generate": "randomize",
+        "steps": 25,
+        "appearance_guidance": 3,
+        "emotion_guidance": 6,
+        "fps": 12.5,
+        "motion_bucket_id": 8,
+        "motion_bucket_id_exp": 16,
+        "strength": 1,
+        "frames_per_batch": 14,
+        "overlap": 0,
+        "shift_offset": 7
+      }
+    }
+  ],
+  "links": [
+    [
+      2,
+      1,
+      1,
+      4,
+      1,
+      "VAE"
+    ],
+    [
+      3,
+      1,
+      1,
+      2,
+      1,
+      "VAE"
+    ],
+    [
+      4,
+      1,
+      2,
+      2,
+      0,
+      "CLIP_VISION"
+    ],
+    [
+      5,
+      1,
+      3,
+      2,
+      4,
+      "DTYPE"
+    ],
+    [
+      6,
+      6,
+      0,
+      2,
+      2,
+      "AUDIO"
+    ],
+    [
+      7,
+      7,
+      0,
+      2,
+      3,
+      "IMAGE"
+    ],
+    [
+      10,
+      4,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      11,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      12,
+      6,
+      0,
+      5,
+      1,
+      "AUDIO"
+    ],
+    [
+      14,
+      11,
+      1,
+      5,
+      2,
+      "FLOAT"
+    ],
+    [
+      13,
+      5,
+      0,
+      8,
+      0,
+      "VIDEO"
+    ],
+    [
+      16,
+      12,
+      0,
+      4,
+      0,
+      "LATENT"
+    ],
+    [
+      17,
+      2,
+      0,
+      12,
+      1,
+      "DICE_NATIVE_DATA"
+    ],
+    [
+      18,
+      1,
+      0,
+      12,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7513148009015777,
+      "offset": [
+        370.87733325808296,
+        217.77705552871683
+      ]
+    },
+    "frontendVersion": "1.57.1"
+  },
+  "version": 0.4
+}
